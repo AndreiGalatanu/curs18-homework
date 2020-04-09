@@ -1,47 +1,40 @@
 package ro.fasttrackit.khomework
 
-class Shop<T : ShopItem>() {
-    private var items = mutableListOf<T>()
+class Shop<T : ShopItem>(private val items: MutableList<T> = mutableListOf()) {
 
     fun addItem(item: T) {
         this.items.add(item)
     }
 
-    fun getListOfItems(): MutableList<T> {
-        return items
-    }
+    fun getListOfItems(): List<T> = if (items.isEmpty()) listOf() else items
 
-    fun findByCategory(category: Category): MutableList<T> {
+    fun findByCategory(category: Category): List<T> {
         val result = mutableListOf<T>()
         for (item in items) {
-            if (item.category() == category) {
+            if (item.category == category) {
                 result.add(item)
             }
         }
         return result
     }
 
-    fun findWithLowerPrice(maxPrice: Int): MutableList<T> {
+    fun findWithLowerPrice(maxPrice: Int): List<T> {
         val result = mutableListOf<T>()
         for (item in items) {
-            if (item.price() <= maxPrice) {
+            if (item.price <= maxPrice) {
                 result.add(item)
             }
         }
         return result
-    }
-
-    private fun noItemByNameFound(name: String): Nothing {
-        throw IllegalArgumentException("No item found: $name")
     }
 
     fun findByName(name: String): T? {
         for (item in items) {
-            if (item.name().toLowerCase() == name.toLowerCase()) {
+            if (item.name.toLowerCase() == name.toLowerCase()) {
                 return item
             }
         }
-        noItemByNameFound(name)
+        return null
     }
 
     fun removeItem(name: String): T? {
@@ -50,13 +43,13 @@ class Shop<T : ShopItem>() {
             this.items.remove(item)
             return item
         }
-        noItemByNameFound(name)
+        return null
     }
 
     fun totalShoppingPrice(): Int {
         var sum = 0
         for (item in items) {
-            sum += item.price()
+            sum += item.price
         }
         return sum
     }
